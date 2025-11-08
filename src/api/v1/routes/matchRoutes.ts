@@ -79,3 +79,62 @@ router.post(
     matchController.createMatch
 );
 
+/**
+ * @openapi
+ * /matches/{id}:
+ *   put:
+ *     summary: Update an existing match record
+ *     tags: [Matches]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Match document ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Match'
+ *     responses:
+ *       200:
+ *         description: Match updated successfully
+ *       404:
+ *         description: Match not found
+ */
+router.put(
+    "/:id",
+    matchController.updateMatch
+);
+
+/**
+ * @openapi
+ * /matches/{id}:
+ *   delete:
+ *     summary: Delete a match record
+ *     tags: [Matches]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Match document ID
+ *     responses:
+ *       200:
+ *         description: Match deleted successfully
+ *       404:
+ *         description: Match not found
+ */
+router.delete(
+    "/:id",
+    matchController.deleteMatch
+);
+
+export default router;
