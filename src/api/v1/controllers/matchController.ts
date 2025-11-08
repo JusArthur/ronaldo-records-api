@@ -37,7 +37,7 @@ export const createMatch = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const { opponent, date, goals, assists, hatTrick } = req.body;
+        const { opponent, date, goals, assists } = req.body;
 
         const newMatch: Match = await matchService.createMatch({
             opponent,
@@ -67,7 +67,7 @@ export const updateMatch = async (
 ): Promise<void> => {
     try {
         const { id } = req.params;
-        const { opponent, date, goals, assists, hatTrick } = req.body;
+        const { opponent, date, goals, assists } = req.body;
 
         const updatedMatch: Match = await matchService.updateMatch(id, {
             opponent,
