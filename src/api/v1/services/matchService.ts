@@ -6,7 +6,7 @@ import { Match } from "../models/matchModel";
  * @returns A list of all matches
  */
 export const getAllMatches = async (): Promise<Match[]> => {
-    const snapshot = await db.collection("matches").get();
+    const snapshot: FirebaseFirestore.QuerySnapshot = await db.collection("matches").get();
     return snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -19,8 +19,8 @@ export const getAllMatches = async (): Promise<Match[]> => {
  * @returns The newly created match
  */
 export const createMatch = async (matchData: Omit<Match, "id">): Promise<Match> => {
-    const newDoc = await db.collection("matches").add(matchData);
-    const created = await newDoc.get();
+    const newDoc: FirebaseFirestore.DocumentReference = await db.collection("matches").add(matchData);
+    const created: FirebaseFirestore.DocumentSnapshot = await newDoc.get();
     return { id: created.id, ...created.data() } as Match;
 };
 
@@ -31,9 +31,9 @@ export const createMatch = async (matchData: Omit<Match, "id">): Promise<Match> 
  * @returns The updated match record
  */
 export const updateMatch = async (id: string, matchData: Partial<Match>): Promise<Match> => {
-    const matchRef = db.collection("matches").doc(id);
+    const matchRef: FirebaseFirestore.DocumentReference = db.collection("matches").doc(id);
     await matchRef.update(matchData);
-    const updated = await matchRef.get();
+    const updated: FirebaseFirestore.DocumentSnapshot = await matchRef.get();
     return { id: updated.id, ...updated.data() } as Match;
 };
 
