@@ -40,6 +40,7 @@ describe("Match Routes", () => {
     jest.clearAllMocks();
   });
 
+  // Test get all matches route
   it("GET /api/v1/matches should call getAllMatches", async () => {
     (matchController.getAllMatches as jest.Mock).mockImplementation(
       (req: Request, res: Response) =>
@@ -51,6 +52,7 @@ describe("Match Routes", () => {
     expect(matchController.getAllMatches).toHaveBeenCalled();
   });
 
+  // Test create match route
   it("POST /api/v1/matches should call createMatch", async () => {
     (matchController.createMatch as jest.Mock).mockImplementation(
       (req: Request, res: Response) =>
@@ -65,6 +67,7 @@ describe("Match Routes", () => {
     expect(matchController.createMatch).toHaveBeenCalled();
   });
 
+  // Test get match by ID route
   it("GET /api/v1/matches/:id should call getMatchById", async () => {
     (matchController.getMatchById as jest.Mock).mockImplementation(
       (req: Request, res: Response) => res.status(200).json({ id: req.params.id })
@@ -75,6 +78,7 @@ describe("Match Routes", () => {
     expect(matchController.getMatchById).toHaveBeenCalled();
   });
 
+  // Test update match route
   it("PUT /api/v1/matches/:id should call updateMatch", async () => {
     (matchController.updateMatch as jest.Mock).mockImplementation(
       (req: Request, res: Response) =>
@@ -89,6 +93,7 @@ describe("Match Routes", () => {
     expect(matchController.updateMatch).toHaveBeenCalled();
   });
 
+  // Test delete match route
   it("DELETE /api/v1/matches/:id should call deleteMatch", async () => {
     (matchController.deleteMatch as jest.Mock).mockImplementation(
       (req: Request, res: Response) => res.status(200).json({ deleted: true })

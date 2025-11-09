@@ -4,8 +4,10 @@ import * as matchService from "../src/api/v1/services/matchService";
 import { HTTP_STATUS } from "../src/api/constants/httpConstants";
 import { Match } from "../src/api/v1/models/matchModel";
 
+// Mock the matchService module
 jest.mock("../src/api/v1/services/matchService");
 
+// Unit tests for matchController
 describe("Match Controller", () => {
   let mockReq: Partial<Request>;
   let mockRes: Partial<Response>;
@@ -21,6 +23,7 @@ describe("Match Controller", () => {
     mockNext = jest.fn();
   });
 
+  // Tests for getAllMatches controller method
   describe("getAllMatches", () => {
     it("should return all matches successfully", async () => {
       const mockMatches: Match[] = [
@@ -39,6 +42,7 @@ describe("Match Controller", () => {
       });
     });
 
+    // Error handling test
     it("should call next with error if service fails", async () => {
       const error = new Error("Service error");
       (matchService.getAllMatches as jest.Mock).mockRejectedValue(error);
@@ -49,6 +53,7 @@ describe("Match Controller", () => {
     });
   });
 
+  // Tests for createMatch controller method
   describe("createMatch", () => {
     it("should create a match successfully", async () => {
       const mockBody = { opponent: "Real Madrid", date: "2022-01-01", goals: 1, assists: 0 };
@@ -77,6 +82,7 @@ describe("Match Controller", () => {
     });
   });
 
+  // Tests for updateMatch controller method
   describe("updateMatch", () => {
     it("should update a match successfully", async () => {
       const mockBody = { opponent: "Juventus", date: "2023-01-01", goals: 3, assists: 2 };
@@ -107,6 +113,7 @@ describe("Match Controller", () => {
     });
   });
 
+  // Tests for deleteMatch controller method
   describe("deleteMatch", () => {
     it("should delete a match successfully", async () => {
       mockReq.params = { id: "1" };
