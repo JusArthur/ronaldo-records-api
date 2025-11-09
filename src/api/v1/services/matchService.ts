@@ -25,6 +25,21 @@ export const createMatch = async (matchData: Omit<Match, "id">): Promise<Match> 
 };
 
 /**
+ * Gets a match record by its ID from Firestore
+ * @param id - The ID of the match to retrieve
+ * @returns The match record or null if not found
+ */
+export const getMatchById = async (id: string): Promise<Match | null> => {
+    const matchRef: FirebaseFirestore.DocumentReference = db.collection("matches").doc(id);
+    const matchDoc: FirebaseFirestore.DocumentSnapshot = await matchRef.get();
+
+    if (!matchDoc.exists) {
+        return null;
+    }
+    return { id: matchDoc.id, ...matchDoc.data() } as Match;
+}
+
+/**
  * Updates an existing match record in Firestore
  * @param id - The ID of the match to update
  * @param matchData - The updated match data
