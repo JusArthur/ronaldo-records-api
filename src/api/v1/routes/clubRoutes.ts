@@ -83,3 +83,5 @@ router.post(
     validateRequest(clubSchemas.create),
     clubController.createClub
 );
+
+export default router;
