@@ -2,8 +2,7 @@ import request from "supertest";
 import express, { Request, Response, NextFunction } from "express";
 
 /**
- * ✅ Properly mock all middlewares before importing routes
- * All mocks must explicitly call `next()` — otherwise Express hangs.
+ * Properly mock all middlewares before importing routes
  */
 jest.mock("../src/api/v1/middleware/authenticate", () =>
   jest.fn((req: Request, res: Response, next: NextFunction) => next())
@@ -28,7 +27,7 @@ jest.mock("../src/api/v1/controllers/matchController", () => ({
   deleteMatch: jest.fn(),
 }));
 
-// ✅ Import routes only after all mocks are defined
+// Import routes only after all mocks are defined
 import matchRoutes from "../src/api/v1/routes/matchRoutes";
 import * as matchController from "../src/api/v1/controllers/matchController";
 
