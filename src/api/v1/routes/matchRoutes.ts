@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import * as matchController from "../controllers/matchController.js";
+import * as matchController from "../controllers/matchController";
 import { validateRequest } from "../middleware/validate";
 import { matchSchemas } from "../validations/matchValidation";
 import authenticate from "../middleware/authenticate";
