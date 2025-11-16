@@ -3,6 +3,11 @@ import axios from "axios";
 import { Request, Response, NextFunction } from "express";
 import { db } from "../../../../config/firebaseConfig";
 
+interface RequestWithCountry extends Request {
+    country?: string | null;
+  }
+  
+
 const getClientIp = (req: Request): string => {
   return (
     req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
@@ -21,7 +26,7 @@ const getCountryFromIP = async (ip: string): Promise<string | null> => {
   }
 };
 
-export const geoMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const geoMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     // const ip = "8.8.8.8"; Google DNS returning US, only for testing
 
     const ip: string = getClientIp(req);
@@ -42,7 +47,7 @@ export const geoMiddleware = async (req: Request, res: Response, next: NextFunct
       console.log("Country is null — not writing to Firestore");
     }
   
-    (req as any).country = country;
+    (req as RequestWithCountry).country = country;
     next();
-  };
+};
   
