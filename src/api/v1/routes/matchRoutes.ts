@@ -1,5 +1,10 @@
 import express, { Router } from "express";
-import * as matchController from "../controllers/matchController.js";
+import * as matchController from "../controllers/matchController";
+import { validateRequest } from "../middleware/validate";
+import { matchSchemas } from "../validations/matchValidation";
+import authenticate from "../middleware/authenticate";
+import isAuthorized from "../middleware/authorize";
+import { AuthorizationOptions } from "../models/authorizationOptions";
 
 const router: Router = express.Router();
 
@@ -24,7 +29,10 @@ const router: Router = express.Router();
  *                 $ref: '#/components/schemas/Match'
  *
  */
-router.get("/", matchController.getAllMatches);
+router.get("/", 
+    authenticate,
+    isAuthorized({ hasRole: ["admin"], allowSameUser: true } as AuthorizationOptions),
+    matchController.getAllMatches);
 
 // sequential order authenticate -> isAuthorized -> validateRequest -> createMatch
 
@@ -76,8 +84,39 @@ router.get("/", matchController.getAllMatches);
  */
 router.post(
     "/",
+    authenticate,
+    isAuthorized({ hasRole: ["user"] } as AuthorizationOptions),
+    validateRequest(matchSchemas.create),
     matchController.createMatch
 );
+
+/**
+ * @openapi
+ * /matches/{id}:
+ *   get:
+ *     summary: Retrieves a list of matches
+ *     tags: [Matches]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of Matches
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Match'
+ */
+router.get(
+    "/:id",
+    authenticate,
+    isAuthorized({
+        hasRole: ["admin"],
+        allowSameUser: true,
+    } as AuthorizationOptions),
+    matchController.getMatchById
+)
 
 /**
  * @openapi
@@ -108,6 +147,12 @@ router.post(
  */
 router.put(
     "/:id",
+    authenticate,
+    isAuthorized({
+        hasRole: ["admin"],
+        allowSameUser: true,
+    } as AuthorizationOptions),
+    validateRequest(matchSchemas.update),
     matchController.updateMatch
 );
 
@@ -134,6 +179,8 @@ router.put(
  */
 router.delete(
     "/:id",
+    authenticate,
+    isAuthorized({ hasRole: ["admin"] } as AuthorizationOptions),
     matchController.deleteMatch
 );
 
