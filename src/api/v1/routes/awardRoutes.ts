@@ -1,45 +1,45 @@
 import express, { Router } from "express";
-import * as clubController from "../controllers/clubController";
+import * as awardController from "../controllers/awardController";
 import { validateRequest } from "../middleware/validate";
-import { clubSchemas } from "../validations/clubValidation";
+import { awardSchemas } from "../validations/awardValidation";
 import authenticate from "../middleware/authenticate";
 import isAuthorized from "../middleware/authorize";
 import { AuthorizationOptions } from "../models/authorizationOptions";
 
 const router: Router = express.Router();
 
-// "/api/v1/clubs" prefixes all below routes
+// "/api/v1/awards" prefixes all below routes
 
 /**
  * @openapi
- * /clubs:
+ * /awards:
  *   get:
- *     summary: Retrieves a list of clubs
- *     tags: [Clubs]
+ *     summary: Retrieves a list of awards
+ *     tags: [Awards]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: A list of Clubs
+ *         description: A list of Awards
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Club'
+ *                 $ref: '#/components/schemas/Award'
  *
  */
 router.get("/", 
     authenticate,
     isAuthorized({ hasRole: ["admin"], allowSameUser: true } as AuthorizationOptions),
-    clubController.getAllClubs);
+    awardController.getAllAwards);
 
 /**
  * @openapi
- * /clubs:
+ * /awards:
  *   post:
- *     summary: Create a new club record
- *     tags: [Clubs]
+ *     summary: Create a new award
+ *     tags: [Awards]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -50,29 +50,21 @@ router.get("/",
  *             type: object
  *             required:
  *               - name
- *               - season
- *               - goals
- *               - assists
+ *               - year
  *             properties:
  *               name:
  *                 type: string
- *                 example: "Manchester United"
- *               seasons:
- *                 type: string
- *                 example: "2003-2009"
- *               goals:
+ *                 example: "Ballon d'Or"
+ *               year:
  *                 type: number
- *                 example: 145
- *               assists:
- *                 type: number
- *                 example: 37
+ *                 example: "2018"
  *     responses:
  *       201:
- *         description: Club created successfully
+ *         description: Award created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Club'
+ *               $ref: '#/components/schemas/Award'
  *       400:
  *         description: Invalid input data
  */
@@ -80,8 +72,8 @@ router.post(
     "/",
     authenticate,
     isAuthorized({ hasRole: ["user"] } as AuthorizationOptions),
-    validateRequest(clubSchemas.create),
-    clubController.createClub
+    validateRequest(awardSchemas.create),
+    awardController.createAward
 );
 
 export default router;
