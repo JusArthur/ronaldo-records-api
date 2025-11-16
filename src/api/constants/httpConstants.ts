@@ -1,4 +1,4 @@
-export const HTTP_STATUS = {
+export const HTTP_STATUS: Record<string, number> = {
     // Success responses
     OK: 200,
     CREATED: 201,
