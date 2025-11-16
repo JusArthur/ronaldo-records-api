@@ -69,9 +69,6 @@ router.get("/",
  *               assists:
  *                 type: number
  *                 example: 1
- *               hatTrick:
- *                 type: boolean
- *                 example: false
  *     responses:
  *       201:
  *         description: Match created successfully
