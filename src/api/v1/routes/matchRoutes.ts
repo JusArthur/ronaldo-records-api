@@ -29,10 +29,15 @@ const router: Router = express.Router();
  *                 $ref: '#/components/schemas/Match'
  *
  */
-router.get("/", 
-    authenticate,
-    isAuthorized({ hasRole: ["admin"], allowSameUser: true } as AuthorizationOptions),
-    matchController.getAllMatches);
+router.get(
+  "/",
+  authenticate,
+  isAuthorized({
+    hasRole: ["admin"],
+    allowSameUser: true,
+  } as AuthorizationOptions),
+  matchController.getAllMatches
+);
 
 // sequential order authenticate -> isAuthorized -> validateRequest -> createMatch
 
@@ -80,11 +85,11 @@ router.get("/",
  *         description: Invalid input data
  */
 router.post(
-    "/",
-    authenticate,
-    isAuthorized({ hasRole: ["user"] } as AuthorizationOptions),
-    validateRequest(matchSchemas.create),
-    matchController.createMatch
+  "/",
+  authenticate,
+  isAuthorized({ hasRole: ["user"] } as AuthorizationOptions),
+  validateRequest(matchSchemas.create),
+  matchController.createMatch
 );
 
 /**
@@ -106,14 +111,14 @@ router.post(
  *                 $ref: '#/components/schemas/Match'
  */
 router.get(
-    "/:id",
-    authenticate,
-    isAuthorized({
-        hasRole: ["admin"],
-        allowSameUser: true,
-    } as AuthorizationOptions),
-    matchController.getMatchById
-)
+  "/:id",
+  authenticate,
+  isAuthorized({
+    hasRole: ["admin"],
+    allowSameUser: true,
+  } as AuthorizationOptions),
+  matchController.getMatchById
+);
 
 /**
  * @openapi
@@ -143,14 +148,14 @@ router.get(
  *         description: Match not found
  */
 router.put(
-    "/:id",
-    authenticate,
-    isAuthorized({
-        hasRole: ["admin"],
-        allowSameUser: true,
-    } as AuthorizationOptions),
-    validateRequest(matchSchemas.update),
-    matchController.updateMatch
+  "/:id",
+  authenticate,
+  isAuthorized({
+    hasRole: ["admin"],
+    allowSameUser: true,
+  } as AuthorizationOptions),
+  validateRequest(matchSchemas.update),
+  matchController.updateMatch
 );
 
 /**
@@ -175,10 +180,10 @@ router.put(
  *         description: Match not found
  */
 router.delete(
-    "/:id",
-    authenticate,
-    isAuthorized({ hasRole: ["admin"] } as AuthorizationOptions),
-    matchController.deleteMatch
+  "/:id",
+  authenticate,
+  isAuthorized({ hasRole: ["admin"] } as AuthorizationOptions),
+  matchController.deleteMatch
 );
 
 export default router;

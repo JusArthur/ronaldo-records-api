@@ -27,6 +27,37 @@ export const getAllClubs = async (
 }
 
 /**
+ * Handles requests, response to retrieve a club record by ID
+ * @param req - express Request
+ * @param res - express Response
+ * @param next - express middleware chaining function
+ */
+export const getClubById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { id }: { id?: string } = req.params;
+        const club: Club | null = await clubService.getClubById(id as string);
+
+        if (!club) {
+            res.status(HTTP_STATUS.NOT_FOUND).json(
+                successResponse(null, "Club not found")
+            );
+            return;
+        }
+
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(club, "Club successfully retrieved")
+        );
+    } catch (error: unknown) {
+        next(error);
+    }
+}
+
+
+/**
  * Handles requests, responses, and validation to create a new club record
  * @param req - express Request
  * @param res - express Response
@@ -38,7 +69,7 @@ export const createClub = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const clubData: Omit<Club, "id"> = req.body;
+        const clubData: Omit<Club, "id"> = req.body as Omit<Club, "id">;
         const newClub: Club = await clubService.createClub(clubData);
         res.status(HTTP_STATUS.CREATED).json(
             successResponse(newClub, "Club successfully created")
@@ -47,3 +78,51 @@ export const createClub = async (
         next(error);
     }
 }
+
+/**
+ * Handles requests and responses to update an existing club record
+ * @param req - express Request
+ * @param res - express Response
+ * @param next - express middleware chaining function
+ */
+export const updateClub = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { id }: { id?: string } = req.params;
+        const clubData: Partial<Club> = req.body as Partial<Club>;
+
+        const updatedClub: Club = await clubService.updateClub(id as string, clubData);
+
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(updatedClub, "Club updated successfully")
+        );
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+
+/**
+ * Handles requests and responses to delete a club record
+ * @param req - express Request
+ * @param res - express Response
+ * @param next - express middleware chaining function
+ */
+export const deleteClub = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { id }: { id?: string } = req.params;
+        await clubService.deleteClub(id as string);
+
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(null, "Club successfully deleted")
+        );
+    } catch (error: unknown) {
+        next(error);
+    }
+};
