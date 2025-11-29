@@ -56,4 +56,27 @@ export const clubSchemas: Record<string, RequestSchema> = {
             }),
         }),
     },
+        // PUT /api/v1/clubs/:id - Update existing club
+        update: {
+            params: Joi.object({
+                id: Joi.string().required().messages({
+                    "any.required": "Club ID is required",
+                    "string.empty": "Club ID cannot be empty",
+                }),
+            }),
+            body: Joi.object({
+                name: Joi.string().optional().messages({
+                    "string.empty": "Club name cannot be empty",
+                }),
+                seasons: Joi.string().optional().messages({
+                    "string.empty": "Seasons cannot be empty",
+                }),
+                goals: Joi.number().optional().min(0).messages({
+                    "number.min": "Goals cannot be negative",
+                }),
+                assists: Joi.number().optional().min(0).messages({
+                    "number.min": "Assists cannot be negative",
+                }),
+            }),
+        },
 };

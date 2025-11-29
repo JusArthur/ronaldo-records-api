@@ -46,4 +46,23 @@ export const awardSchemas: Record<string, RequestSchema> = {
             }),
         }),
     },
+        // PUT /api/v1/awards/:id - Update existing award
+        update: {
+            params: Joi.object({
+                id: Joi.string().required().messages({
+                    "any.required": "Award ID is required",
+                    "string.empty": "Award ID cannot be empty",
+                }),
+            }),
+            body: Joi.object({
+                name: Joi.string().optional().messages({
+                    "string.empty": "Award name cannot be empty",
+                }),
+                year: Joi.number().integer().min(1800).max(new Date().getFullYear()).optional().messages({
+                    "number.base": "Year must be a number",
+                    "number.min": "Year must be after 1800",
+                    "number.max": "Year cannot be in the future",
+                }),
+            }),
+        },
 };

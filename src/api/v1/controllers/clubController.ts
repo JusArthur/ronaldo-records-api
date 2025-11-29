@@ -91,6 +91,18 @@ export const updateClub = async (
     next: NextFunction
 ): Promise<void> => {
     try {
+        // --- DEBUG: Log the status of req.body ---
+        console.log("DEBUG: Request Body Status:", req.body);
+        
+        // Defensive check to immediately return a clean error if body is missing
+        if (!req.body) {
+            console.error("ERROR: Request body is undefined. Check Content-Type header or middleware order.");
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                successResponse(null, "Invalid request body: Body is empty or Content-Type is missing.")
+            );
+            return;
+        }
+
         const { id }: { id?: string } = req.params;
         const clubData: Partial<Club> = req.body as Partial<Club>;
 
