@@ -32,7 +32,7 @@ router.get(
   "/",
   authenticate,
   isAuthorized({
-    hasRole: ["admin"],
+    hasRole: ["admin", "user"],
     allowSameUser: true,
   } as AuthorizationOptions),
   clubController.getAllClubs

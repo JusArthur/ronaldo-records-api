@@ -1,7 +1,15 @@
 import * as awardService from "../src/api/v1/services/awardService";
 import { Award } from "../src/api/v1/models/awardModel";
 
-const createDocMock = (data?: any) => {
+// Define an interface for the mock document structure
+interface MockDoc {
+  get: jest.Mock;
+  update: jest.Mock;
+  delete: jest.Mock;
+}
+
+// Annotate input data and return type for the mock generator
+const createDocMock = (data?: Partial<Award> | any): MockDoc => {
   return {
     get: jest.fn().mockResolvedValue({
       exists: data !== undefined,
@@ -13,7 +21,11 @@ const createDocMock = (data?: any) => {
   };
 };
 
-const collectionMock = {
+const collectionMock: {
+  get: jest.Mock;
+  add: jest.Mock;
+  doc: jest.Mock;
+} = {
   get: jest.fn(),
   add: jest.fn(),
   doc: jest.fn(),
@@ -31,7 +43,7 @@ describe("Award Service", () => {
   });
 
   it("should create an award successfully", async () => {
-    const mockAwardData = { name: "Ballon d'Or", year: 2017 };
+    const mockAwardData: Omit<Award, 'id'> = { name: "Ballon d'Or", year: 2017 };
     const docMock = createDocMock(mockAwardData);
 
     collectionMock.add.mockResolvedValue(docMock);
@@ -44,14 +56,14 @@ describe("Award Service", () => {
   });
 
   it("should retrieve all awards successfully", async () => {
-    const mockAwards = [
+    const mockAwards: Award[] = [
       { id: "1", name: "Golden Boot", year: 2014 },
     ];
     collectionMock.get.mockResolvedValue({
       docs: mockAwards.map((a) => ({ id: a.id, data: () => a })),
     });
 
-    const result = await awardService.getAllAwards();
+    const result: Award[] = await awardService.getAllAwards();
     expect(result).toEqual(mockAwards);
   });
 
@@ -69,15 +81,16 @@ describe("Award Service", () => {
     const docMock = createDocMock({ year: 2018 });
     collectionMock.doc.mockReturnValue(docMock);
 
-    const result = await awardService.updateAward("1", { year: 2018 });
+    const updateData: Partial<Award> = { year: 2018 };
+    const result: Award = await awardService.updateAward("1", updateData);
 
     expect(collectionMock.doc).toHaveBeenCalledWith("1");
-    expect(docMock.update).toHaveBeenCalledWith({ year: 2018 });
+    expect(docMock.update).toHaveBeenCalledWith(updateData);
     expect(result).toEqual({ id: "1", year: 2018 });
   });
 
   it("should get an award by ID successfully", async () => {
-    const mockData = { name: "Puskas Award", year: 2009 };
+    const mockData: Omit<Award, 'id'> = { name: "Puskas Award", year: 2009 };
     const docMock = createDocMock(mockData);
     collectionMock.doc.mockReturnValue(docMock);
 
@@ -85,6 +98,7 @@ describe("Award Service", () => {
 
     expect(collectionMock.doc).toHaveBeenCalledWith("1");
     expect(docMock.get).toHaveBeenCalled();
+    expect(result).not.toBeNull();
     expect(result).toEqual({
       id: "1",
       ...mockData,
