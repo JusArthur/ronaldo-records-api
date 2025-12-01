@@ -1,5 +1,5 @@
 import request from "supertest";
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, Application } from "express";
 
 /**
  * Properly mock all middlewares before importing routes
@@ -31,7 +31,7 @@ jest.mock("../src/api/v1/controllers/matchController", () => ({
 import matchRoutes from "../src/api/v1/routes/matchRoutes";
 import * as matchController from "../src/api/v1/controllers/matchController";
 
-const app = express();
+const app: Application = express();
 app.use(express.json());
 app.use("/api/v1/matches", matchRoutes);
 
@@ -43,11 +43,11 @@ describe("Match Routes", () => {
   // Test get all matches route
   it("GET /api/v1/matches should call getAllMatches", async () => {
     (matchController.getAllMatches as jest.Mock).mockImplementation(
-      (req: Request, res: Response) =>
+      (req: Request, res: Response): Response =>
         res.status(200).json([{ id: "1", opponent: "Barcelona" }])
     );
 
-    const res = await request(app).get("/api/v1/matches");
+    const res: request.Response = await request(app).get("/api/v1/matches");
     expect(res.status).toBe(200);
     expect(matchController.getAllMatches).toHaveBeenCalled();
   });
@@ -55,11 +55,11 @@ describe("Match Routes", () => {
   // Test create match route
   it("POST /api/v1/matches should call createMatch", async () => {
     (matchController.createMatch as jest.Mock).mockImplementation(
-      (req: Request, res: Response) =>
+      (req: Request, res: Response): Response =>
         res.status(201).json({ id: "1", opponent: "Barcelona" })
     );
 
-    const res = await request(app)
+    const res: request.Response = await request(app)
       .post("/api/v1/matches")
       .send({ opponent: "Barcelona", date: "2024-04-18", goals: 2, assists: 1 });
 
@@ -70,10 +70,10 @@ describe("Match Routes", () => {
   // Test get match by ID route
   it("GET /api/v1/matches/:id should call getMatchById", async () => {
     (matchController.getMatchById as jest.Mock).mockImplementation(
-      (req: Request, res: Response) => res.status(200).json({ id: req.params.id })
+      (req: Request, res: Response): Response => res.status(200).json({ id: req.params.id })
     );
 
-    const res = await request(app).get("/api/v1/matches/123");
+    const res: request.Response = await request(app).get("/api/v1/matches/123");
     expect(res.status).toBe(200);
     expect(matchController.getMatchById).toHaveBeenCalled();
   });
@@ -81,11 +81,11 @@ describe("Match Routes", () => {
   // Test update match route
   it("PUT /api/v1/matches/:id should call updateMatch", async () => {
     (matchController.updateMatch as jest.Mock).mockImplementation(
-      (req: Request, res: Response) =>
+      (req: Request, res: Response): Response =>
         res.status(200).json({ id: req.params.id, updated: true })
     );
 
-    const res = await request(app)
+    const res: request.Response = await request(app)
       .put("/api/v1/matches/123")
       .send({ goals: 3 });
 
@@ -96,10 +96,10 @@ describe("Match Routes", () => {
   // Test delete match route
   it("DELETE /api/v1/matches/:id should call deleteMatch", async () => {
     (matchController.deleteMatch as jest.Mock).mockImplementation(
-      (req: Request, res: Response) => res.status(200).json({ deleted: true })
+      (req: Request, res: Response): Response => res.status(200).json({ deleted: true })
     );
 
-    const res = await request(app).delete("/api/v1/matches/123");
+    const res: request.Response = await request(app).delete("/api/v1/matches/123");
     expect(res.status).toBe(200);
     expect(matchController.deleteMatch).toHaveBeenCalled();
   });

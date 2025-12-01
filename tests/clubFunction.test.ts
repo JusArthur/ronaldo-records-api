@@ -1,7 +1,15 @@
 import * as clubService from "../src/api/v1/services/clubService";
 import { Club } from "../src/api/v1/models/clubModel";
 
-const createDocMock = (data?: any) => {
+// Define an interface for the mock document structure
+interface MockDoc {
+  get: jest.Mock;
+  update: jest.Mock;
+  delete: jest.Mock;
+}
+
+// Annotate input data and return type for the mock generator
+const createDocMock = (data?: Partial<Club> | any): MockDoc => {
   return {
     get: jest.fn().mockResolvedValue({
       exists: data !== undefined,
@@ -31,7 +39,7 @@ describe("Club Service", () => {
   });
 
   it("should create a club successfully", async () => {
-    const mockClubData = {
+    const mockClubData: Omit<Club, 'id'> = {
       name: "Manchester United",
       seasons: "2003-2009",
       goals: 118,
@@ -49,14 +57,14 @@ describe("Club Service", () => {
   });
 
   it("should retrieve all clubs successfully", async () => {
-    const mockClubs = [
+    const mockClubs: Club[] = [
       { id: "1", name: "Real Madrid", seasons: "2009-2018", goals: 450, assists: 120 },
     ];
     collectionMock.get.mockResolvedValue({
       docs: mockClubs.map((c) => ({ id: c.id, data: () => c })),
     });
 
-    const result = await clubService.getAllClubs();
+    const result: Club[] = await clubService.getAllClubs();
     expect(result).toEqual(mockClubs);
   });
 
@@ -79,15 +87,16 @@ describe("Club Service", () => {
     const docMock = createDocMock({ goals: 451 });
     collectionMock.doc.mockReturnValue(docMock);
 
-    const result = await clubService.updateClub("1", { goals: 451 });
+    const updateData: Partial<Club> = { goals: 451 };
+    const result: Club = await clubService.updateClub("1", updateData);
 
     expect(collectionMock.doc).toHaveBeenCalledWith("1");
-    expect(docMock.update).toHaveBeenCalledWith({ goals: 451 });
+    expect(docMock.update).toHaveBeenCalledWith(updateData);
     expect(result).toEqual({ id: "1", goals: 451 });
   });
 
   it("should get a club by ID successfully", async () => {
-    const mockData = {
+    const mockData: Omit<Club, 'id'> = {
       name: "Sporting CP",
       seasons: "2002-2003",
       goals: 5,
@@ -97,6 +106,9 @@ describe("Club Service", () => {
     collectionMock.doc.mockReturnValue(docMock);
 
     const result = await clubService.getClubById("1");
+    if (!result) {
+      throw new Error("Club not found");
+    }
 
     expect(collectionMock.doc).toHaveBeenCalledWith("1");
     expect(docMock.get).toHaveBeenCalled();

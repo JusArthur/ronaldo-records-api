@@ -1,5 +1,6 @@
 // import the express application and type definition
 import express, { Express } from "express";
+import cors from "cors";
 import matchRoutes from "./api/v1/routes/matchRoutes";
 import adminRoutes from "./api/v1/routes/adminRoutes";
 import clubRoutes from "./api/v1/routes/clubRoutes";
@@ -9,6 +10,11 @@ import setupSwagger from "../config/swagger";
 
 // create an instance of the express application
 const app: Express = express();
+
+app.use(cors({
+    origin: 'http://localhost:5173', 
+    credentials: true
+  }));
 
 app.use(express.json());
 

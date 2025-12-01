@@ -44,7 +44,7 @@ describe("Match Controller", () => {
 
     // Error handling test
     it("should call next with error if service fails", async () => {
-      const error = new Error("Service error");
+      const error: Error = new Error("Service error");
       (matchService.getAllMatches as jest.Mock).mockRejectedValue(error);
 
       await matchController.getAllMatches(mockReq as Request, mockRes as Response, mockNext);
@@ -56,7 +56,7 @@ describe("Match Controller", () => {
   // Tests for createMatch controller method
   describe("createMatch", () => {
     it("should create a match successfully", async () => {
-      const mockBody = { opponent: "Real Madrid", date: "2022-01-01", goals: 1, assists: 0 };
+      const mockBody: Omit<Match, 'id'> = { opponent: "Real Madrid", date: "2022-01-01", goals: 1, assists: 0 };
       const mockMatch: Match = { id: "1", ...mockBody };
 
       mockReq.body = mockBody;
@@ -74,7 +74,7 @@ describe("Match Controller", () => {
     });
 
     it("should call next with error if service fails", async () => {
-      const error = new Error("Service error");
+      const error: Error = new Error("Service error");
       (matchService.createMatch as jest.Mock).mockRejectedValue(error);
 
       await matchController.createMatch(mockReq as Request, mockRes as Response, mockNext);
@@ -85,7 +85,7 @@ describe("Match Controller", () => {
   // Tests for updateMatch controller method
   describe("updateMatch", () => {
     it("should update a match successfully", async () => {
-      const mockBody = { opponent: "Juventus", date: "2023-01-01", goals: 3, assists: 2 };
+      const mockBody: Omit<Match, 'id'> = { opponent: "Juventus", date: "2023-01-01", goals: 3, assists: 2 };
       const mockMatch: Match = { id: "1", ...mockBody };
 
       mockReq.body = mockBody;
@@ -104,7 +104,7 @@ describe("Match Controller", () => {
     });
 
     it("should call next with error if service fails", async () => {
-      const error = new Error("Service error");
+      const error: Error = new Error("Service error");
       mockReq.params = { id: "1" };
       (matchService.updateMatch as jest.Mock).mockRejectedValue(error);
 
@@ -132,7 +132,7 @@ describe("Match Controller", () => {
     });
 
     it("should call next with error if service fails", async () => {
-      const error = new Error("Service error");
+      const error: Error = new Error("Service error");
       mockReq.params = { id: "1" };
       (matchService.deleteMatch as jest.Mock).mockRejectedValue(error);
 
