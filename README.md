@@ -126,7 +126,7 @@ When the server is running locally, you can access the interactive Swagger UI at
 
 (If you have deployed this, paste the link here. If not, remove this line)
 
-> **[View Live API Documentation](https://www.google.com/search?q=https://your-deployed-url.com/api-docs)**
+> **[View Live API Documentation](https://jusarthur.github.io/ronaldo-records-api/)**
 
 -----
 
